@@ -1,5 +1,6 @@
 package com.powerflasher.SampleApp {
 	
+	import flash.sensors.Accelerometer;
 	import flash.text.*; 
 	import flash.display.*;
  	import flash.events.*;
@@ -45,11 +46,15 @@ package com.powerflasher.SampleApp {
 		private function updateBall(e:Event):void{
 			if (myTextBox.y < (stage.stageHeight - myTextBox.textHeight))
 				myTextBox.y += deltaY;
+			else 
+				stage.removeEventListener(Event.ENTER_FRAME, updateBall);
 		}
 		
 		private function KeyDown(event:KeyboardEvent):void{
-    		if (event.keyCode == Keyboard.RIGHT)
-				myTextBox.y = (stage.stageHeight - myTextBox.textHeight);
+    		if (event.keyCode == Keyboard.RIGHT){
+				stage.removeEventListener(Event.ENTER_FRAME, updateBall);
+				myTextBox.y = 0;
+			}
 		} 
 
 	}
