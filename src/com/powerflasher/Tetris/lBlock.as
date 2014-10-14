@@ -46,5 +46,14 @@ package com.powerflasher.Tetris {
 		Sprite4.graphics.endFill();
 		addChild(Sprite4);
 	}
+	
+		override public function getSprites():Array
+		{
+			SpriteArray[0] = 8;
+			SpriteArray[1] = 8;
+			SpriteArray[2] = 6;
+			return SpriteArray;
+		}
+	
 	}
 }

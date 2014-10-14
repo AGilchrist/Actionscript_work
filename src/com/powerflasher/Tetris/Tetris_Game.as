@@ -3,7 +3,8 @@ package com.powerflasher.Tetris {
 	import flash.text.*; 
 	import flash.display.*;
  	import flash.events.*;
- 	import flash.ui.*; 
+	import flash.ui.*;
+	import flash.geom.Matrix;
 	
 	/**
 	 * @author Alistair
@@ -14,13 +15,21 @@ package com.powerflasher.Tetris {
 		private var tetrominoArray:Array = ["line", "square", "t-block", "s-block", "reverse-s-block", "l-block", "reverse-l-block"];
 		private var colourArray:Array = new Array(0xFFFF33, 0x79DCF4, 0xFF3333, 0xFFCC33, 0x99CC33, 0xCC3399);
 		private var activeBlock:tetromino;
+		private var blockarray:Array = new Array();
+		private var fieldArray:Array;
+		
 		private var fallSpeed:int = 5;
 		private var windowWidth:int = 300;
 		private var windowHeight:int = 500;
-		private var windowBorder:Shape = new Shape();
+		private var i:int;
+		private var j:int;
+		private var coloumnNum:int;
+		
+		private var rightBorder:Shape = new Shape();
+		private var leftBorder:Shape = new Shape();
+		private var bottomBorder:Shape = new Shape();
 		private var startButton:Sprite = new Sprite();
 		private var myButtonText:TextField = new TextField();
-		
 		
 		public function Tetris_Game()
 		{
@@ -33,22 +42,35 @@ package com.powerflasher.Tetris {
         	startButton.graphics.endFill();
 			startButton.addEventListener(MouseEvent.CLICK, startGame);
 			this.addChild(startButton);
+			
+			fieldArray = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
+			[0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]];
+			
 		}
 		
 		private var colourID:int;
 		private var blockID:int;
-		private var i:int;
 		
 		private function startGame(eventObject:MouseEvent):void
 		{
 			removeChild(startButton);
-			windowBorder.graphics.lineStyle(3, 0x000000);
-			windowBorder.graphics.beginFill(0xFFFFFF);
-			windowBorder.graphics.drawRect(0, 0, windowWidth, windowHeight);
-			windowBorder.graphics.endFill();
-			windowBorder.x = ((stage.stageWidth/2)-(windowWidth/2));
-			windowBorder.y = (stage.stageHeight - windowHeight);
-			this.addChild(windowBorder);
+		
+			rightBorder.graphics.beginFill(0x000000);
+			rightBorder.graphics.drawRect(((stage.stageWidth/2)+(windowWidth/2)), 0, stage.stageWidth, windowHeight);
+			rightBorder.graphics.endFill();
+			this.addChild(rightBorder);
+			
+			leftBorder.graphics.beginFill(0x000000);
+			leftBorder.graphics.drawRect(0, 0, ((stage.stageWidth/2)-(windowWidth/2)), windowHeight);
+			leftBorder.graphics.endFill();
+			this.addChild(leftBorder);
+			
+			bottomBorder.graphics.beginFill(0x000000);
+			bottomBorder.graphics.drawRect(((stage.stageWidth/2)-(windowWidth/2)), stage.stageHeight, ((stage.stageWidth/2)+(windowWidth/2)), (stage.stageHeight + 5));
+			bottomBorder.graphics.endFill();
+			this.addChild(bottomBorder);
+			
+			myButtonText.textColor = 0xFFFFFF;
 			myButtonText.width = 100;
 			myButtonText.height = 80;
 			this.addChild(myButtonText)
@@ -71,20 +93,22 @@ package com.powerflasher.Tetris {
 			}
 			activeBlock.drawShape(colourArray[colourID], stage);
 			this.addChild(activeBlock);
+			coloumnNum = 5;
 			stage.addEventListener(Event.ENTER_FRAME, blockFall);
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, KeyDown);
 		}
 		
 		private function blockFall(e:Event):void
 		{
-			myButtonText.text = "colourID x = " + colourID + ",\n" + "BlockID = " + blockID;
+			myButtonText.text = "" + fieldArray[0][5];
 			
-			if (activeBlock.y < stage.stageHeight)
-				activeBlock.y += fallSpeed;
-			else
+			activeBlock.y += fallSpeed;
+			
+			if (activeBlock.hitTestObject(bottomBorder))
 			{
-				activeBlock.y = stage.stageHeight;
+				activeBlock.y = activeBlock.y;
 				stage.removeEventListener(Event.ENTER_FRAME, blockFall);
+				fieldArray[0][coloumnNum] = 1;
 				selectBlock();
 			}
 		}
@@ -92,19 +116,33 @@ package com.powerflasher.Tetris {
 		private function KeyDown(event:KeyboardEvent):void{
     		if (event.keyCode == Keyboard.RIGHT)
 			{
-				if(activeBlock.x < ((windowWidth/2)-activeBlock.getWidth()))
+				if(!activeBlock.hitTestObject(rightBorder)){
 					activeBlock.x += activeBlock.getWidth();
+					coloumnNum ++;
+				}
 			}
 			if (event.keyCode == Keyboard.LEFT)
 			{
-				if(activeBlock.x > ((windowWidth/2)*-1))
+				if(!activeBlock.hitTestObject(leftBorder)){
 					activeBlock.x -= activeBlock.getWidth();
+					coloumnNum --;
+				}
 			}
 			if (event.keyCode == Keyboard.DOWN)
 			{
-				activeBlock.y += 5;
+				if(!activeBlock.hitTestObject(bottomBorder))
+					activeBlock.y += 5;
 			}
+			if(event.keyCode == Keyboard.A)
+			{
+				
+			}
+			if(event.keyCode == Keyboard.D)
+			{
+				
+			}			
 		}
+		
 	}
 	
 }

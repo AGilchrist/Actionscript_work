@@ -25,16 +25,16 @@ package com.powerflasher.Tetris {
 		Sprite2.graphics.lineStyle(3, 0x000000);
 		Sprite2.graphics.beginFill(colourID,1);
 		Sprite2.graphics.drawRect(0, 0, BlockWidth, BlockHeight);
-		Sprite2.x = screen.stageWidth/2;
-		Sprite2.y = (0 - (BlockHeight*2));
+		Sprite2.x = (screen.stageWidth/2 - BlockWidth);
+		Sprite2.y = (0 - BlockHeight);
 		Sprite2.graphics.endFill();
 		addChild(Sprite2);
 		
 		Sprite3.graphics.lineStyle(3, 0x000000);
 		Sprite3.graphics.beginFill(colourID,1);
 		Sprite3.graphics.drawRect(0, 0, BlockWidth, BlockHeight);
-		Sprite3.x = (screen.stageWidth/2 - BlockWidth);
-		Sprite3.y = (0 - BlockHeight);
+		Sprite3.x = screen.stageWidth/2;
+		Sprite3.y = (0 - (BlockHeight*2));
 		Sprite3.graphics.endFill();
 		addChild(Sprite3);
 		
@@ -46,5 +46,14 @@ package com.powerflasher.Tetris {
 		Sprite4.graphics.endFill();
 		addChild(Sprite4);
 	}
+	
+	override public function getSprites():Array
+		{
+			SpriteArray[0] = 4;
+			SpriteArray[1] = 9;
+			SpriteArray[2] = 3;
+			return SpriteArray;
+		}
+	
 	}
 }
